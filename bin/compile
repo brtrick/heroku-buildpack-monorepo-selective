@@ -18,6 +18,11 @@ if [ ! -f "${ENV_DIR}/APP_BASE" ]; then
 fi
 APP_BASE="$(cat "${ENV_DIR}/APP_BASE")"
 
+if [ git diff --name-only --diff-filter=AMDR @^ | grep -q "${APP_BASE}" ]; then
+    echo "No files changed. Exiting build" | indent
+    exit 0
+fi
+
 (
     mv "${BUILD_DIR}/${APP_BASE}" "${STAGE}" &&
     rm -rf "${BUILD_DIR}"/* &&
